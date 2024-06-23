@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: azure_sql_server
+    database: bronze-datastore
+    schema: dbo
+    tables:
+      - name: Cosential_Opportunities
+      - name: Cosential_Opportunities_DeliveryMethod
+      - name: Cosential_Opportunities_Office
+      - name: Cosential_Opportunities_PrimaryCategory
+      - name: Cosential_Opportunities_ProspectType
+      - name: Cosential_Opportunities_Role
+      - name: Cosential_Opportunities_SubmittalType

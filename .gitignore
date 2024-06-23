@@ -1,0 +1,35 @@
+
+.env
+.git
+.DS_Store
+*venv
+*myenv
+
+## airflow files
+airflow_settings.yaml
+__pycache__/
+astro
+airflow-webserver.pid
+webserver_config.py
+airflow.cfg
+airflow.db
+dbt_project/.env
+dbt_project/myenv
+homework/dbt_project/.env
+homework/dbt_project/myenv
+myenv
+.vscode
+.idea/
+.vscode
+
+## dbt project files
+dbt_project/logs/
+dbt_project/.user.yml
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/*myenv/
+dbt_project/dbt.env
+package-lock.yml
+
+## project specific files
+include/test.txt

@@ -1,0 +1,17 @@
+azure_sql_server_profile:
+  target: dev
+  outputs:
+    dev:
+      type: sqlserver
+      server: azure-sql-server.database.windows.net #replace with your server name. eg: azure-sql-server.database.windows.net
+      port: 1433
+      database: your-database #replace with your database name. eg: bronze-datastore
+      user: your-sql-login #replace with your sql server authentication username. eg: sql-admin
+      password: your-sql-password #replace with your sql server authentication password
+      driver: 'ODBC Driver 17 for SQL Server' #This is the driver used to connect to the database. You can change this to any driver you want to use.
+      schema: src #This is the schema used whenever this profile is used. You can change this to any schema you want to use.
+      extra:
+        encrypt: yes
+        trustServerCertificate: no
+        connectionTimeout: 30
+

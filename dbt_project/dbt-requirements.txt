@@ -1,0 +1,2 @@
+sqlfluff==3.0.6
+dbt-sqlserver==1.7.4
