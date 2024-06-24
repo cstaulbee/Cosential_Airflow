@@ -7,6 +7,7 @@ This repository is designed to make incremental requests to the Cosential/Unanet
 
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
+    - [Setting Up Docker & Astro](#setting-up-docker--astro)
   - [Local Development](#local-development)
     - [Debugging](#debugging)
   - [dbt Project Setup](#dbt-project-setup)
@@ -20,6 +21,68 @@ This repository is designed to make incremental requests to the Cosential/Unanet
 
 ## **Prerequisites**
 
+### **Configure Service Principal**
+
+This particular project authenticates to Azure using a Service Principal. If you have an existing Service Principal, you ignore the following steps.
+The Service Principal will be used to access Azure Key Vault for safe handling of keys and passwords, as well as read/write to Azure Data Lake Storage (ADLS).
+
+[Official Documentation](https://learn.microsoft.com/en-us/entra/identity-platform/howto-create-service-principal-portal)
+
+1. **Sign in to the Azure portal**: Go to the [Azure portal](https://portal.azure.com) and sign in with your Azure account.
+
+2. **Navigate to the Azure Active Directory (AAD) blade**: In the Azure portal, search for "Azure Active Directory" and select it from the search results.
+
+3. **Go to "App registrations"**: In the Azure Active Directory blade, click on "App registrations" in the left-hand menu.
+
+4. **Register a new application**: Click on the "New registration" button to register a new application.
+
+5. **Provide application details**: Enter a name for your application, select the appropriate account type, and enter a redirect URI if required. Then click on the "Register" button to create the application.
+
+6. **Note down the application (client) ID**: After the application is registered, note down the "Application (client) ID" value. You will need this later.
+
+7. **Add API permissions**: In the application's blade, click on "API permissions" in the left-hand menu.
+
+8. **Add permissions for ADLS**: Click on the "Add a permission" button and select "Azure Data Lake Storage" from the list of APIs. Choose the appropriate permissions (e.g., "DataLake.Read" and "DataLake.Write") and click on the "Add permissions" button.
+
+9. **Add permissions for Key Vault**: Click on the "Add a permission" button again and select "Azure Key Vault" from the list of APIs. Choose the appropriate permissions (e.g., "KeyVault.Get" and "KeyVault.Set") and click on the "Add permissions" button.
+
+10. **Grant admin consent**: In the API permissions blade, click on the "Grant admin consent" button to grant the required permissions.
+
+11. **Create a client secret**: In the application's blade, click on "Certificates & secrets" in the left-hand menu. Then click on the "New client secret" button to create a new client secret. Note down the secret value as it will be displayed only once.
+
+
+### **Create an Azure storage account
+
+1. **Follow the instructions found on Microsoft Learn to create a storage account: [Create a storage account to use with Azure Data Lake Storage Gen2](https://learn.microsoft.com/en-us/azure/storage/blobs/create-data-lake-storage-account)** Make sure you enable **hierarchical namsepace** when setting up the storage account
+
+### **Create Key Vault & Configure Permissions in the Azure Portal
+
+#### **To create a Key Vault, please follow these steps:**
+
+1. Follow the instructions provided in the [Azure Key Vault quick create guide](https://learn.microsoft.com/en-us/azure/key-vault/general/quick-create-portal) to complete the creation process.
+
+#### **To assign a Key Vault access policy to a service principal that allows it to read and write secrets, follow these steps:**
+
+1. Open the Azure portal and navigate to your Key Vault resource.
+
+2. In the Key Vault blade, click on "Access control (IAM)" in the left-hand menu.
+
+3. Click on the "Add" button to add a new role assignment.
+
+4. In the "Add role assignment" blade, select the appropriate role for reading and writing secrets, such as "Key Vault Secrets Officer".
+
+5. In the "Add members" field, search for the name or client ID of the service principal that you want to assign the access policy to.
+
+6. Select the service principal from the search results.
+
+7. Click on the "Save" button to assign the role to the service principal.
+
+Once the access policy is assigned, the service principal will have the necessary permissions to read and write secrets in the Key Vault.
+[Official Microsoft Learn documentation on Assigning access policies](https://learn.microsoft.com/en-us/azure/key-vault/general/assign-access-policy?tabs=azure-portal)
+
+
+### **Setting Up Docker & Astro**
+
 1. **Install [Docker](https://docs.docker.com/engine/install/)**: Docker is a platform for packaging, distributing, and managing applications in containers.
 2. **Install the [Astro CLI](https://docs.astronomer.io/astro/cli/install-cli)**: Astro CLI is a command-line tool designed for working with Apache Airflow projects, streamlining project creation, deployment, and management for smoother development and deployment workflows.
 
@@ -27,8 +90,8 @@ This repository is designed to make incremental requests to the Cosential/Unanet
 
 1. **Clone the Repository**: Open a terminal, navigate to your desired directory, and clone the repository using:
     ```bash
-    git clone git@github.com:cstaulbee/Airflow_Cosential # clone the repo
-    cd Airflow_Cosential # navigate into the new folder
+    git clone git@github.com:cstaulbee/Cosential_Airflow # clone the repo
+    cd Cosential_Airflow # navigate into the new folder
     ```
     
     1. If you don’t have SSH configured with the GitHub CLI, please follow the instructions for [generating a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) and [adding a new SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account?tool=cli) in the GitHub docs.
@@ -62,7 +125,7 @@ astro dev restart # Restart the running Docker container
 astro dev kill # Remove all astro docker components
 ```
 
-### **Debugging**
+#### **Debugging**
 
 If the Airflow UI isn't updating, the project seems slow, Docker behaves unexpectedly, or other issues arise, first remove Astro containers and rebuild the project:
 
